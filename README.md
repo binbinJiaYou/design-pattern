@@ -22,4 +22,5 @@
 以气象数据为例，当气象数据（具体主题）发生变化时，所有显示屏（具体观察者）都要刷新显示数据（观察者的更新操作）。  
 类图如下：  
 ![观察者类图示例](res/imgs/observer/1/weather-data.png)   
-代码示例：[观察者模式的简单示例](behavioral-pattern/observer/1/test.cpp)
+示例：[观察者模式的简单示例](behavioral-pattern/observer/1/test.cpp)  
+示例：[使用泛型适应不同的主题](behavioral-pattern/observer/2/test.cpp)  
