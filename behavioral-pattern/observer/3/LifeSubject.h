@@ -20,8 +20,8 @@ namespace LifeSubject
 {
     enum class Stage;
     using Subject = ObserverPattern::Subject<Stage>;
-    using Observer = ObserverPattern::Observer<Stage>;
 
+    // 一个人一生的阶段
     enum class Stage
     {
         CHILD = 0,
@@ -32,13 +32,13 @@ namespace LifeSubject
     };
 
     // 外貌观察者
-    class AppearanceObserver : public Observer
+    class AppearanceObserver
     {
     public:
         AppearanceObserver() : stage(Stage::CHILD) {}
         ~AppearanceObserver() = default;
 
-        void Update(Stage stage) override
+        void operator()(Stage stage)
         {
             this->stage = stage;
             std::cout << "她现在看起来" << appearanceMap[this->stage] << std::endl;
@@ -57,17 +57,22 @@ namespace LifeSubject
         {Stage::STAGE_LENGTH, "..., 她难道想成仙吗? !!!"}};
 
     // 身高观察者
-    class HeightObserver : public Observer
+    class HeightObserver
     {
     public:
         HeightObserver() : stage(Stage::CHILD) {}
         ~HeightObserver() = default;
 
-        void Update(Stage stage) override
+        void operator()(Stage stage)
         {
             this->stage = stage;
             std::cout << "她现在看起来" << heightMap[this->stage] << std::endl;
             std::cout << "================================" << std::endl;
+        }
+
+        auto GetFunctor()
+        {
+            return std::function(*this);
         }
 
     private:
@@ -80,7 +85,6 @@ namespace LifeSubject
         {Stage::ADULT, "已经长大了，变得亭亭玉立了"},
         {Stage::OLD, "有点佝偻了"},
         {Stage::STAGE_LENGTH, "..., 她难道想成仙吗? !!!"}};
-
 
     class Life : public Subject
     {
@@ -109,7 +113,7 @@ namespace LifeSubject
             {
                 if (observer)
                 {
-                    observer->Update(stage);
+                    (*observer)(stage);
                 }
             }
         }
@@ -122,7 +126,7 @@ namespace LifeSubject
     class Client
     {
     public:
-        void SetStage(Life& life, Stage stage)
+        void SetStage(Life &life, Stage stage)
         {
             life.SetStage(stage);
             life.Notify();

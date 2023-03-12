@@ -24,3 +24,4 @@
 ![观察者类图示例](res/imgs/observer/1/weather-data.png)   
 示例：[观察者模式的简单示例](behavioral-pattern/observer/1/test.cpp)  
 示例：[使用泛型适应不同的主题](behavioral-pattern/observer/2/test.cpp)  
+示例: [对泛型的优化，使观察者的编码变得更灵活](behavioral-pattern/observer/3/test.cpp)  

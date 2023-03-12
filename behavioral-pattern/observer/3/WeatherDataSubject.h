@@ -18,7 +18,52 @@
 namespace WeatherDataSubject
 {
     using Subject = ObserverPattern::Subject<float, float, float>;
-    using Observer = ObserverPattern::Observer<float, float, float>;
+
+    class Display
+    {
+    public:
+        Display(std::string no) : no(no) {}
+        ~Display() = default;
+
+        void operator()(float temperature, float humidity, float pressure)
+        {
+            std::cout << no << " 显示屏: "
+                      << "温度：" << temperature << " "
+                      << "湿度：" << humidity << " "
+                      << "气压：" << pressure << std::endl;
+            std::cout << "================================" << std::endl;
+        }
+
+    private:
+        std::string no;
+    };
+
+    class Parser
+    {
+    public:
+        Parser() = default;
+        ~Parser() = default;
+
+        void operator()(float temperature, float humidity, float pressure)
+        {
+            std::cout << "现在的氛围" << (IsNiceAir(temperature, humidity, pressure) ? "适合表白" : "不适合表白") << std::endl;
+            std::cout << "================================" << std::endl;
+        }
+
+    private:
+        bool IsNiceAir(float temperature, float humidity, float pressure)
+        {
+            auto equal = [](float a, float b, float interal)
+            {
+                using namespace std;
+                return abs(a - b) <= interal;
+            };
+            return equal(temperature, 5.0f, 0.01f) && equal(humidity, 2.0f, 0.01f) && equal(pressure, 0.0f, 0.01f);
+        }
+
+    private:
+        // 对象内部的数据
+    };
 
     class WeatherData : public Subject
     {
@@ -49,7 +94,7 @@ namespace WeatherDataSubject
             {
                 if (observer)
                 {
-                    observer->Update(temperature, humidity, pressure);
+                    (*observer)(temperature, humidity, pressure);
                 }
             }
         }
@@ -59,56 +104,6 @@ namespace WeatherDataSubject
         float humidity;    // 湿度
         float pressure;    // 气压
         std::set<Observer *> observerSet;
-    };
-
-    // 第一种观察者 显示屏
-    class Display : public Observer
-    {
-    public:
-        Display(std::string no) : no(no) {}
-        ~Display() = default;
-        
-        void Update(float temperature, float humidity, float pressure) override
-        {
-            std::cout << no << " 显示屏: "
-                      << "温度：" << temperature << " "
-                      << "湿度：" << humidity << " "
-                      << "气压：" << pressure << std::endl;
-            std::cout << "================================" << std::endl;
-        }
-
-    private:
-        std::string no;
-    };
-
-    // 第二种观察者 环境氛围解析器
-    // 告白神器
-    // 骗你的, 哈哈哈
-    class Parser : public Observer
-    {
-    public:
-        Parser() = default;
-        ~Parser() = default;
-
-        void Update(float temperature, float humidity, float pressure) override
-        {
-            std::cout << "现在的氛围" << (IsNiceAir(temperature, humidity, pressure) ? "适合表白" : "不适合表白") << std::endl;
-            std::cout << "================================" << std::endl;
-        }
-
-    private:
-        bool IsNiceAir(float temperature, float humidity, float pressure)
-        {
-            auto equal = [](float a, float b, float interal)
-            {
-                using namespace std;
-                return abs(a - b) <= interal;
-            };
-            return equal(temperature, 5.0f, 0.01f) && equal(humidity, 2.0f, 0.01f) && equal(pressure, 0.0f, 0.01f);
-        }
-
-    private:
-        // 对象内部的数据
     };
 
     class Client

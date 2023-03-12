@@ -39,6 +39,7 @@ class WeatherData : public Subject
 {
 public:
     WeatherData() : temperature(0.0f), humidity(0.0f), pressure(0.0f) {}
+    ~WeatherData() = default;
 
     void SetWeatherData(float temperature, float humidity, float pressure)
     {
@@ -80,6 +81,7 @@ class Display : public Observer
 {
 public:
     Display(std::string no) : no(no) {}
+    ~Display() = default;
 
     void Update(float temperature, float humidity, float pressure) override
     {
@@ -100,6 +102,9 @@ private:
 class Parser : public Observer
 {
 public:
+    Parser() = default;
+    ~Parser() = default;
+
     void Update(float temperature, float humidity, float pressure) override
     {
         std::cout << "现在的氛围" << (IsNiceAir(temperature, humidity, pressure) ? "适合表白" : "不适合表白") << std::endl;
