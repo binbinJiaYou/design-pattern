@@ -70,11 +70,6 @@ namespace LifeSubject
             std::cout << "================================" << std::endl;
         }
 
-        auto GetFunctor()
-        {
-            return std::function(*this);
-        }
-
     private:
         static std::map<Stage, std::string> heightMap;
         Stage stage;
