@@ -19,7 +19,7 @@ namespace ObserverPattern
     {
     public:
         Subject() = default;
-        virtual Subject() = default;
+        virtual ~Subject() = default;
 
         using Observer = std::function<void(Args...)>;
         virtual void Register(Observer &observer) = 0;

@@ -11,8 +11,9 @@
  */
 #pragma once
 #include <iostream>
+#include <algorithm>
 #include <cmath>
-#include <set>
+#include <list>
 #include "Common.h"
 
 namespace WeatherDataSubject
@@ -80,17 +81,21 @@ namespace WeatherDataSubject
 
         void Register(Observer &observer) override
         {
-            observerSet.insert(&observer);
+            observerList.push_back(&observer);
         }
 
         void Unregister(Observer &observer) override
         {
-            observerSet.erase(&observer);
+            auto it = std::find(observerList.begin(), observerList.end(), &observer);
+            if (it != observerList.end())
+            {
+                observerList.erase(it);
+            }
         }
 
         void Notify() override
         {
-            for (auto &observer : observerSet)
+            for (auto &observer : observerList)
             {
                 if (observer)
                 {
@@ -103,7 +108,7 @@ namespace WeatherDataSubject
         float temperature; // 温度
         float humidity;    // 湿度
         float pressure;    // 气压
-        std::set<Observer *> observerSet;
+        std::list<Observer *> observerList;
     };
 
     class Client

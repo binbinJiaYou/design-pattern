@@ -11,8 +11,9 @@
  */
 #pragma once
 #include <iostream>
+#include <algorithm>
 #include <cmath>
-#include <set>
+#include <list>
 #include <map>
 #include "Common.h"
 
@@ -81,7 +82,6 @@ namespace LifeSubject
         {Stage::OLD, "有点佝偻了"},
         {Stage::STAGE_LENGTH, "..., 她难道想成仙吗? !!!"}};
 
-
     class Life : public Subject
     {
     public:
@@ -95,17 +95,21 @@ namespace LifeSubject
 
         void Register(Observer &observer) override
         {
-            observerSet.insert(&observer);
+            observerList.push_back(&observer);
         }
 
         void Unregister(Observer &observer) override
         {
-            observerSet.erase(&observer);
+            auto it = std::find(observerList.begin(), observerList.end(), &observer);
+            if (it != observerList.end())
+            {
+                observerList.erase(it);
+            }
         }
 
         void Notify() override
         {
-            for (auto &observer : observerSet)
+            for (auto &observer : observerList)
             {
                 if (observer)
                 {
@@ -116,13 +120,13 @@ namespace LifeSubject
 
     private:
         Stage stage;
-        std::set<Observer *> observerSet;
+        std::list<Observer *> observerList;
     };
 
     class Client
     {
     public:
-        void SetStage(Life& life, Stage stage)
+        void SetStage(Life &life, Stage stage)
         {
             life.SetStage(stage);
             life.Notify();

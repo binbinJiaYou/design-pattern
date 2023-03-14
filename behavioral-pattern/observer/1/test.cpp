@@ -9,9 +9,10 @@
  *
  * 以气象数据为例，当气象数据（具体主题）发生变化时，所有显示屏（具体观察者）都要刷新显示数据（观察者的更新操作）。
  */
-#include <set>
+#include <list>
 #include <iostream>
 #include <functional>
+#include <algorithm>
 using namespace std;
 
 class Observer
@@ -50,18 +51,22 @@ public:
 
     void Register(Observer &observer) override
     {
-        observerSet.insert(&observer);
+        observerList.push_back(&observer);
     }
 
     void Unregister(Observer &observer) override
     {
-        observerSet.erase(&observer);
+        auto it = find(observerList.begin(), observerList.end(), &observer);
+        if (it != observerList.end())
+        {
+            observerList.erase(it);
+        }
     }
 
     // 通知观察者
     void Notify() override
     {
-        for (auto &observer : observerSet)
+        for (auto &observer : observerList)
         {
             if (observer)
             {
@@ -74,7 +79,7 @@ private:
     float temperature; // 温度
     float humidity;    // 湿度
     float pressure;    // 气压
-    set<Observer *> observerSet;
+    list<Observer *> observerList;
 };
 
 class Display : public Observer
